@@ -54,12 +54,39 @@ public class UdfJpaTemplateImpl implements UdfTemplate {
     }
 
     @Override
-    public <T> List<Aggregation> aggregate(Class<T> entityClass, Filterable filterable, Aggregable... aggregables) {
+    public <T> Page<T> filter(Class<T> entityClass, Filterable filterable, Pageable pageable, Specification<T> specification) {
+        if (Objects.isNull(specification)) return filter(entityClass, filterable, pageable, specification);
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<T> cq = cb.createQuery(entityClass);
+        Root<T> root = cq.from(entityClass);
+        prepareWhere(entityClass, root, cq, cb, filterable, specification);
+        TypedQuery<T> q = this.createQuery(cq, pageable);
+        Long count = this.count(entityClass, filterable, specification);
+        return new PageImpl<>(q.getResultList(), pageable, count);
+    }
+
+    @Override
+    public <T> List<Aggregation> aggregate(Class<T> entityClass, Filterable filterable, Aggregable[] aggregables) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();
         Root<T> root = cq.from(entityClass);
         prepareSelect(entityClass, root, cq, cb, aggregables);
         prepareWhere(entityClass, root, cq, cb, filterable);
+        return getAggregations(aggregables, cq);
+    }
+
+    @Override
+    public <T> List<Aggregation> aggregate(Class<T> entityClass, Filterable filterable, Aggregable[] aggregables, Specification<T> specification) {
+        if (Objects.isNull(specification)) return aggregate(entityClass, filterable, aggregables);
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Tuple> cq = cb.createTupleQuery();
+        Root<T> root = cq.from(entityClass);
+        prepareSelect(entityClass, root, cq, cb, aggregables);
+        prepareWhere(entityClass, root, cq, cb, filterable, specification);
+        return getAggregations(aggregables, cq);
+    }
+
+    private List<Aggregation> getAggregations(Aggregable[] aggregables, CriteriaQuery<Tuple> cq) {
         TypedQuery<Tuple> query = em.createQuery(cq);
         Tuple tuple = query.getSingleResult();
         List<Aggregation> aggregations = new ArrayList<>();
@@ -75,6 +102,16 @@ public class UdfJpaTemplateImpl implements UdfTemplate {
         Root<T> root = cq.from(entityClass);
         cq.select(cb.count(root));
         prepareWhere(entityClass, root, cq, cb, filterable);
+        TypedQuery<Long> q = em.createQuery(cq);
+        return q.getSingleResult();
+    }
+
+    private <T> Long count(Class<T> entityClass, Filterable filterable, Specification<T> specification) {
+        CriteriaBuilder cb = em.getCriteriaBuilder();
+        CriteriaQuery<Long> cq = cb.createQuery(Long.class);
+        Root<T> root = cq.from(entityClass);
+        cq.select(cb.count(root));
+        prepareWhere(entityClass, root, cq, cb, filterable, specification);
         TypedQuery<Long> q = em.createQuery(cq);
         return q.getSingleResult();
     }

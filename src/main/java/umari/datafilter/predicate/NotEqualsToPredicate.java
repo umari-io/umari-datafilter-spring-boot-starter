@@ -36,14 +36,11 @@ public class NotEqualsToPredicate extends AbstractPredicate {
         Path<?> path = root.get(this.getDataField());
         log.debug("NotEqualsToPredicate(field: {}, type: {}, value: {})", this.getDataField(), dataFieldType, this.getValue());
 
-        if (dataFieldType == Boolean.class && (boolean) this.getValue() == true)
-            return cb.isFalse(path.as(Boolean.class));
-        if (dataFieldType == Boolean.class && (boolean) this.getValue() == false)
-            return cb.isTrue(path.as(Boolean.class));
+        if (dataFieldType == Boolean.class && (boolean) this.getValue() == true) return cb.isFalse(path.as(Boolean.class));
+        if (dataFieldType == Boolean.class && (boolean) this.getValue() == false) return cb.isTrue(path.as(Boolean.class));
         if (getValue() == "@notnull") return cb.isNull(path);
         if (getValue() == "@null") return cb.isNotNull(path);
-        if (dataFieldType.isEnum())
-            return cb.notEqual(path, Enum.valueOf((Class<Enum>) dataFieldType, String.valueOf(this.getValue())));
+        if (dataFieldType.isEnum()) return cb.notEqual(path, Enum.valueOf((Class<Enum>) dataFieldType, String.valueOf(this.getValue())));
         return cb.notEqual(path, this.getValue());
     }
 

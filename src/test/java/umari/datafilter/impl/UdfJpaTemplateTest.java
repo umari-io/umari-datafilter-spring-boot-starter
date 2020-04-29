@@ -20,8 +20,11 @@ import umari.datafilter.predicate.Conjunction;
 import umari.datafilter.predicate.EqualsPredicate;
 import umari.datafilter.predicate.LessThanPredicate;
 import umari.datafilter.service.UdfTemplate;
+import umari.datafilter.specification.FooSpecification;
 
 import java.util.List;
+
+import static umari.datafilter.specification.FooSpecification.*;
 
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
@@ -64,6 +67,20 @@ class UdfJpaTemplateTest {
 
     @Test
     @Sql("classpath:foo.sql")
+    void filter_lessThanPredicate_idade_withSpecification() {
+        Conjunction conjunction = new Conjunction();
+        LessThanPredicate lessThanPredicate = new LessThanPredicate();
+        lessThanPredicate.setDataField("idade");
+        lessThanPredicate.setValue(35);
+        conjunction.getPredicates().add(lessThanPredicate);
+        Filterable filterable = conjunction;
+
+        Page<Foo> foos = udfTemplate.filter(Foo.class, filterable, PageRequest.of(0, 5), isMasculino());
+        Assertions.assertEquals(2, foos.getTotalElements());
+    }
+
+    @Test
+    @Sql("classpath:foo.sql")
     void aggregate_count_nome() {
         Conjunction conjunction = new Conjunction();
         EqualsPredicate equalsPredicate = new EqualsPredicate();
@@ -80,7 +97,7 @@ class UdfJpaTemplateTest {
         aggregable2.setDataField("idade");
         aggregable2.setOperation(Aggregable.Operation.SUM);
 
-        List<Aggregation> aggregations = udfTemplate.aggregate(Foo.class, filterable, aggregable, aggregable2);
+        List<Aggregation> aggregations = udfTemplate.aggregate(Foo.class, filterable, new Aggregable[]{aggregable, aggregable2});
 
         log.info("");
         log.info("Aggregations: {}", aggregations);

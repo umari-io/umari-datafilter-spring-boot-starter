@@ -32,11 +32,11 @@ public class GreaterThanPredicate extends AbstractPredicate {
 
 		if (dataFieldType == LocalDate.class) return cb.greaterThan(path.as(LocalDate.class), getLocalDateValue(this.getValue()));
 		if (dataFieldType == LocalDateTime.class) return cb.greaterThan(path.as(LocalDateTime.class), getLocalDateTimeValue(this.getValue()));
-		if (dataFieldType == Long.class) return cb.gt(path.as(Number.class), (Number) this.getValue());
-		if (dataFieldType == Integer.class) return cb.gt(path.as(Number.class), (Number) this.getValue());
-		if (dataFieldType == Short.class) return cb.gt(path.as(Number.class), (Number) this.getValue());
-		if (dataFieldType == BigDecimal.class) return cb.gt(path.as(Number.class), new BigDecimal(String.valueOf(this.getValue())));
-		if (dataFieldType == BigInteger.class) return cb.gt(path.as(Number.class), new BigInteger(String.valueOf(this.getValue())));
+		if (dataFieldType == Long.class) return cb.gt(path.as(Long.class), (Long) this.getValue());
+		if (dataFieldType == Integer.class) return cb.gt(path.as(Integer.class), (Integer) this.getValue());
+		if (dataFieldType == Short.class) return cb.gt(path.as(Short.class), (Short) this.getValue());
+		if (dataFieldType == BigDecimal.class) return cb.gt(path.as(BigDecimal.class), new BigDecimal(String.valueOf(this.getValue())));
+		if (dataFieldType == BigInteger.class) return cb.gt(path.as(BigInteger.class), new BigInteger(String.valueOf(this.getValue())));
 		throw new IllegalArgumentException(String.format("Não foi possível montar um predicado para o campo '%s' com o tipo '>'", this.getDataField()));
 	}
 

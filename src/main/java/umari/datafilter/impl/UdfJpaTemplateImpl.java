@@ -5,7 +5,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.stereotype.Service;
 import umari.datafilter.core.Aggregable;
 import umari.datafilter.core.Aggregation;
 import umari.datafilter.core.Filterable;
@@ -19,7 +18,6 @@ import javax.persistence.TypedQuery;
 import javax.persistence.criteria.*;
 import java.util.*;
 import java.util.function.Function;
-import java.util.stream.Collectors;
 
 /**
  * Implementação do template de filtragem para JPA.
@@ -63,11 +61,12 @@ public class UdfJpaTemplateImpl implements UdfTemplate {
         prepareSelect(entityClass, root, cq, cb, aggregables);
         prepareWhere(entityClass, root, cq, cb, filterable);
         TypedQuery<Tuple> query = em.createQuery(cq);
-        return query.getResultList().stream()
-                .flatMap(tuple -> Arrays.asList(tuple.toArray()).stream())
-                .flatMap(tupleValue -> Arrays.asList(aggregables).stream()
-                        .map(agg -> new Aggregation(agg.getDataField(), tupleValue, agg.getOperation())))
-                .collect(Collectors.toList());
+        Tuple tuple = query.getSingleResult();
+        List<Aggregation> aggregations = new ArrayList<>();
+        for (int i = 0; i < tuple.getElements().size(); i++) {
+            aggregations.add(new Aggregation(aggregables[i].getDataField(), tuple.get(i), aggregables[i].getOperation()));
+        }
+        return aggregations;
     }
 
     private <T> Long count(Class<T> entityClass, Filterable filterable) {

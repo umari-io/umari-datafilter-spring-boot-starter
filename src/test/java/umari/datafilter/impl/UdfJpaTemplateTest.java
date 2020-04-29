@@ -3,6 +3,7 @@ package umari.datafilter.impl;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.slf4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.data.domain.Page;
@@ -11,6 +12,8 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.jdbc.Sql;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 import umari.datafilter.UdfConfig;
+import umari.datafilter.core.Aggregable;
+import umari.datafilter.core.Aggregation;
 import umari.datafilter.core.Filterable;
 import umari.datafilter.domain.Foo;
 import umari.datafilter.predicate.Conjunction;
@@ -18,10 +21,15 @@ import umari.datafilter.predicate.EqualsPredicate;
 import umari.datafilter.predicate.LessThanPredicate;
 import umari.datafilter.service.UdfTemplate;
 
+import java.util.List;
+
 @ExtendWith(SpringExtension.class)
 @DataJpaTest
 @ContextConfiguration(classes = UdfConfig.class)
 class UdfJpaTemplateTest {
+
+    private static final Logger log = org.slf4j.LoggerFactory.getLogger(UdfJpaTemplateTest.class);
+
 
     @Autowired
     private UdfTemplate udfTemplate;
@@ -55,6 +63,30 @@ class UdfJpaTemplateTest {
     }
 
     @Test
-    void aggregate() {
+    @Sql("classpath:foo.sql")
+    void aggregate_count_nome() {
+        Conjunction conjunction = new Conjunction();
+        EqualsPredicate equalsPredicate = new EqualsPredicate();
+        equalsPredicate.setDataField("genero");
+        equalsPredicate.setValue(Foo.Genero.MASCULINO);
+        conjunction.getPredicates().add(equalsPredicate);
+        Filterable filterable = conjunction;
+
+        Aggregable aggregable = new Aggregable();
+        aggregable.setDataField("nome");
+        aggregable.setOperation(Aggregable.Operation.COUNT);
+
+        Aggregable aggregable2 = new Aggregable();
+        aggregable2.setDataField("idade");
+        aggregable2.setOperation(Aggregable.Operation.SUM);
+
+        List<Aggregation> aggregations = udfTemplate.aggregate(Foo.class, filterable, aggregable, aggregable2);
+
+        log.info("");
+        log.info("Aggregations: {}", aggregations);
+        log.info("");
+
+        Assertions.assertEquals(4L, aggregations.get(0).getResult());
+        Assertions.assertEquals(139L, aggregations.get(1).getResult());
     }
 }

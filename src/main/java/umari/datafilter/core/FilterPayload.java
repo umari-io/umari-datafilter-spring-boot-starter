@@ -5,21 +5,21 @@ import java.util.Objects;
 /**
  * Classe de requisição de filtragem com a estrutura de predicados e da sumarização.
  */
-public class FilterRequest {
+public class FilterPayload {
 
     private Filterable filterable = new Filterable.EmptyFilterable();
 
-    private AggregationRequest[] aggregations;
+    private Aggregable[] aggregations;
 
-    public static boolean hasAggregable(FilterRequest payload) {
-        return Objects.nonNull(payload) && Objects.nonNull(payload.getAggregations());
+    public static boolean hasAggregable(FilterPayload filterPayload) {
+        return Objects.nonNull(filterPayload) && Objects.nonNull(filterPayload.getAggregations());
     }
 
     public Filterable getFilterable() {
         return this.filterable;
     }
 
-    public AggregationRequest[] getAggregations() {
+    public Aggregable[] getAggregations() {
         return this.aggregations;
     }
 
@@ -27,7 +27,7 @@ public class FilterRequest {
         this.filterable = filterable;
     }
 
-    public void setAggregations(AggregationRequest[] aggregations) {
+    public void setAggregations(Aggregable[] aggregations) {
         this.aggregations = aggregations;
     }
 }

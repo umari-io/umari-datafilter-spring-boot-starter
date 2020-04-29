@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 /**
  * Classe com informações para a realização de uma operação de agregação.
  */
-public class AggregationRequest {
+public class Aggregable {
 
     /**
      * Nome do atributo que sofrerá a operação de agregação.
@@ -43,6 +43,7 @@ public class AggregationRequest {
         @JsonProperty("max") MAX,
         @JsonProperty("min") MIN,
         @JsonProperty("count") COUNT,
+        @JsonProperty("dcount") DCOUNT,
         @JsonProperty("avg") AVG
     }
 }

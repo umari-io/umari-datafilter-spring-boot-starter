@@ -1,1 +1,1 @@
-org.springframework.boot.autoconfigure.EnableAutoConfiguration=umari.datafilter.UDFConfig
+org.springframework.boot.autoconfigure.EnableAutoConfiguration=umari.datafilter.UdfConfig

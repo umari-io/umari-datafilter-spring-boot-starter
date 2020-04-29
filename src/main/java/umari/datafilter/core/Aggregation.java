@@ -3,7 +3,7 @@ package umari.datafilter.core;
 /**
  * Classe que contem o resultado de uma operação de agragação em um atributo.
  */
-public class AggregationResult {
+public class Aggregation {
 
     /**
      * Nome do atributo que sofreu a operação de agragação.
@@ -12,31 +12,26 @@ public class AggregationResult {
 
     /**
      * Tipo de operação de agregação.
-     *
-     * @see br.umari.core.AggregationRequest.Operation
      */
-    private AggregationRequest.Operation operation;
+    private Aggregable.Operation operation;
 
     /**
      * Resultado da operação de agregação no atributo.
      */
     private Object result;
 
-    public AggregationResult(String dataField, Object result, AggregationRequest.Operation operation) {
+    public Aggregation(String dataField, Object result, Aggregable.Operation operation) {
         super();
         this.dataField = dataField;
         this.result = result;
         this.operation = operation;
     }
 
-    public AggregationResult() {
-    }
-
     public String getDataField() {
         return this.dataField;
     }
 
-    public AggregationRequest.Operation getOperation() {
+    public Aggregable.Operation getOperation() {
         return this.operation;
     }
 
@@ -48,7 +43,7 @@ public class AggregationResult {
         this.dataField = dataField;
     }
 
-    public void setOperation(AggregationRequest.Operation operation) {
+    public void setOperation(Aggregable.Operation operation) {
         this.operation = operation;
     }
 

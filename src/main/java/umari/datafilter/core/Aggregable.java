@@ -39,11 +39,21 @@ public class Aggregable {
     }
 
     public enum Operation {
-        @JsonProperty("sum") SUM,
-        @JsonProperty("max") MAX,
-        @JsonProperty("min") MIN,
-        @JsonProperty("count") COUNT,
-        @JsonProperty("dcount") DCOUNT,
-        @JsonProperty("avg") AVG
+        @JsonProperty("sum") SUM("SUM(%s) as %s"),
+        @JsonProperty("max") MAX("MAX(%s) as %s"),
+        @JsonProperty("min") MIN("MIN(%s) as %s"),
+        @JsonProperty("count") COUNT("COUNT(%s) as %s"),
+        @JsonProperty("dcount") DCOUNT("COUNT(DISTINCT %s) as %s"),
+        @JsonProperty("avg") AVG("AVG(%s) as %s");
+        String sqlFragment;
+
+        Operation(String sqlFragment) {
+            this.sqlFragment = sqlFragment;
+        }
+
+        public String getSqlFragment() {
+            return sqlFragment;
+        }
+
     }
 }

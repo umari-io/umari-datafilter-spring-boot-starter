@@ -15,7 +15,7 @@ public abstract class AbstractPredicate extends Expression {
 	private Object value;
 
 	protected Object surroundSingleQuotes(Object value) {
-		if (value instanceof String || value instanceof Date || value instanceof LocalDate || value instanceof LocalDateTime) {
+		if (value instanceof String || value instanceof Date || value instanceof LocalDate || value instanceof LocalDateTime || value instanceof Enum) {
 			return "'" + value + "'";
 		}
 		return value;

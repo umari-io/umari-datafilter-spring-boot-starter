@@ -1,0 +1,47 @@
+= Umari Data Filter Starter
+
+Projeto Starter Spring Boot com API para filtragem de dados e operações de agregção
+
+== Instalação
+
+Como primeiro passo é necessário a inclusão da depedência *umari-datafilter-spring-boot-starter* no `pom.xml`
+
+[source,xml]
+----
+<dependency>
+    <groupId>umari.datafilter</groupId>
+    <artifactId>umari-datafilter-spring-boot-starter</artifactId>
+    <version>1.0.0</version>
+</dependency>
+----
+
+//TODO Incluir repostório do GitHub do projeto
+
+== Utilização da Umari Data Filter
+
+IMPORTANT: Para o correta utilização do projeto é necessário definir a chave `spring.datasource.driver-class-name` no arquivo
+`application.properties`
+
+.H2
+[source, properties]
+----
+spring.datasource.driver-class-name=org.h2.Driver
+----
+
+.Oracle
+[source, properties]
+----
+spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
+----
+
+.MySql
+[source, properties]
+----
+spring.datasource.driver-class-name=com.mysql.jdbc.Driver
+----
+
+.Postgre
+[source, properties]
+----
+spring.datasource.driver-class-name=org.postgresql.Driver
+----

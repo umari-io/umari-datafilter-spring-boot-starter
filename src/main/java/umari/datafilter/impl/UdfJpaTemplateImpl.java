@@ -1,14 +1,17 @@
 package umari.datafilter.impl;
 
 import org.apache.commons.lang3.tuple.Triple;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 import umari.datafilter.core.Aggregable;
 import umari.datafilter.core.Aggregation;
 import umari.datafilter.core.Filterable;
 import umari.datafilter.service.UdfTemplate;
+import umari.datafilter.sql.SqlContext;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -26,6 +29,9 @@ public class UdfJpaTemplateImpl implements UdfTemplate {
 
     @PersistenceContext
     private EntityManager em;
+
+    @Autowired
+    private SqlContext sqlContext;
 
     /**
      * Mapa com os definições de código das operações de agregação.
@@ -66,6 +72,35 @@ public class UdfJpaTemplateImpl implements UdfTemplate {
     }
 
     @Override
+    public Page<List<Map<String, Object>>> filter(String sql, Filterable filterable, Pageable pageable) {
+        Page<List<Map<String, Object>>> page = sqlContext.selectFrom(sql)
+                .where(filterable)
+                .orderBy(pageable.getSort())
+                .limit(pageable)
+                .fetchMaps();
+        sqlContext.clear();
+        return page;
+    }
+
+    @Override
+    public List<Map<String, Object>> filter(String sql, Sort sort, Filterable filter) {
+        List<Map<String, Object>> list;
+        if (Objects.nonNull(filter)) {
+            list = sqlContext.selectFrom(sql)
+                    .where(filter)
+                    .orderBy(sort)
+                    .fetchMaps();
+            sqlContext.clear();
+            return list;
+        }
+        list = sqlContext.selectFrom(sql)
+                .orderBy(sort)
+                .fetchMaps();
+        sqlContext.clear();
+        return list;
+    }
+
+    @Override
     public <T> List<Aggregation> aggregate(Class<T> entityClass, Filterable filterable, Aggregable[] aggregables) {
         CriteriaBuilder cb = em.getCriteriaBuilder();
         CriteriaQuery<Tuple> cq = cb.createTupleQuery();
@@ -84,6 +119,13 @@ public class UdfJpaTemplateImpl implements UdfTemplate {
         prepareSelect(entityClass, root, cq, cb, aggregables);
         prepareWhere(entityClass, root, cq, cb, filterable, specification);
         return getAggregations(aggregables, cq);
+    }
+
+    @Override
+    public List<Aggregation> aggregate(String sql, Filterable filterable, Aggregable[] aggregables) {
+        List<Aggregation> aggregations = sqlContext.aggregate(sql, filterable, aggregables);
+        sqlContext.clear();
+        return aggregations;
     }
 
     private List<Aggregation> getAggregations(Aggregable[] aggregables, CriteriaQuery<Tuple> cq) {

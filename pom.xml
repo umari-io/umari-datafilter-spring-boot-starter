@@ -4,7 +4,7 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>umari.datafilter</groupId>
     <artifactId>umari-datafilter-spring-boot-starter</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>1.0.0</version>
     <name>umari-datafilter-spring-boot-starter</name>
     <description>Spring Boot Starter Umari DataFilter</description>
 

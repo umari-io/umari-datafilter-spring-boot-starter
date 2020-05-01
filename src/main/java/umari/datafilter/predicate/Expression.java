@@ -14,7 +14,7 @@ import javax.persistence.criteria.Root;
  *
  * @author jcruz
  */
-@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type", visible = true)
+@JsonTypeInfo(use = JsonTypeInfo.Id.NAME, include = JsonTypeInfo.As.PROPERTY, property = "type")
 // @formatter:off
 @JsonSubTypes({
         @Type(value = Conjunction.class, name = "and"),

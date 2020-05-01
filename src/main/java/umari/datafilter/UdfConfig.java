@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.AutoConfigurationPackage;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
 import umari.datafilter.impl.UdfJpaTemplateImpl;
@@ -18,6 +19,7 @@ import umari.datafilter.sql.postgre.PostgreContextImpl;
 import javax.sql.DataSource;
 
 @Configuration
+@ComponentScan
 @AutoConfigurationPackage
 public class UdfConfig {
 

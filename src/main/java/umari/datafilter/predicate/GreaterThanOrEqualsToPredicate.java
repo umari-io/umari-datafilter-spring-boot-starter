@@ -39,9 +39,9 @@ public class GreaterThanOrEqualsToPredicate extends AbstractPredicate {
 
 		if (dataFieldType == LocalDate.class) return cb.greaterThanOrEqualTo(path.as(LocalDate.class), getLocalDateValue(this.getValue()));
 		if (dataFieldType == LocalDateTime.class) return cb.greaterThanOrEqualTo(path.as(LocalDateTime.class), getLocalDateTimeValue(this.getValue()));
-		if (dataFieldType == Long.class) return cb.ge(path.as(Long.class), (Long) this.getValue());
-		if (dataFieldType == Integer.class) return cb.ge(path.as(Integer.class), (Integer) this.getValue());
-		if (dataFieldType == Short.class) return cb.ge(path.as(Short.class), (Short) this.getValue());
+		if (dataFieldType == Long.class) return cb.ge(path.as(Long.class), ((Number) this.getValue()).longValue());
+		if (dataFieldType == Integer.class) return cb.ge(path.as(Integer.class), ((Number) this.getValue()).intValue());
+		if (dataFieldType == Short.class) return cb.ge(path.as(Short.class), ((Number) this.getValue()).shortValue());
 		if (dataFieldType == BigDecimal.class) return cb.ge(path.as(BigDecimal.class), new BigDecimal(String.valueOf(this.getValue())));
 		if (dataFieldType == BigInteger.class) return cb.ge(path.as(BigInteger.class), new BigInteger(String.valueOf(this.getValue())));
 		throw new IllegalArgumentException(String.format("Não foi possível montar um predicado para o campo '%s' com o tipo '>='", this.getDataField()));

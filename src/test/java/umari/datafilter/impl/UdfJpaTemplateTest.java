@@ -1,5 +1,8 @@
 package umari.datafilter.impl;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.util.DefaultPrettyPrinter;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -22,6 +25,8 @@ import umari.datafilter.predicate.EqualsPredicate;
 import umari.datafilter.predicate.LessThanPredicate;
 import umari.datafilter.service.UdfTemplate;
 
+import java.io.PrintStream;
+import java.io.PrintWriter;
 import java.util.List;
 import java.util.Map;
 
@@ -40,13 +45,16 @@ class UdfJpaTemplateTest {
 
     @Test
     @Sql("classpath:foo.sql")
-    void filter_equalsPredicate_nome() {
+    void filter_equalsPredicate_nome() throws JsonProcessingException {
         Conjunction conjunction = new Conjunction();
         EqualsPredicate equalsPredicate = new EqualsPredicate();
         equalsPredicate.setDataField("nome");
         equalsPredicate.setValue("José Ribamar Monteiro");
         conjunction.getPredicates().add(equalsPredicate);
         Filterable filterable = conjunction;
+
+        ObjectMapper mapper = new ObjectMapper();
+        System.out.println(mapper.writer(new DefaultPrettyPrinter()).writeValueAsString(filterable));
 
         Page<Foo> foos = udfTemplate.filter(Foo.class, filterable, PageRequest.of(0, 5));
         Assertions.assertEquals(1, foos.getTotalElements());

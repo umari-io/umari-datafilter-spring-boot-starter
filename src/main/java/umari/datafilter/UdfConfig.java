@@ -8,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.jdbc.core.JdbcTemplate;
-import umari.datafilter.impl.UdfJpaTemplateImpl;
+import umari.datafilter.impl.UdfTemplateImpl;
 import umari.datafilter.service.UdfTemplate;
 import umari.datafilter.sql.SqlContext;
 import umari.datafilter.sql.h2.H2ContextImpl;
@@ -35,7 +35,7 @@ public class UdfConfig {
 
     @Bean
     public UdfTemplate getUdfTemplate() {
-        return new UdfJpaTemplateImpl();
+        return new UdfTemplateImpl();
     }
 
     @Bean

@@ -25,7 +25,7 @@ import java.util.function.Function;
 /**
  * Implementação do template de filtragem para JPA.
  */
-public class UdfJpaTemplateImpl implements UdfTemplate {
+public class UdfTemplateImpl implements UdfTemplate {
 
     @PersistenceContext
     private EntityManager em;
@@ -187,7 +187,7 @@ public class UdfJpaTemplateImpl implements UdfTemplate {
      * @param <X>
      */
     private <T, X> void prepareWhere(Class<T> entityClass, Root<T> root, CriteriaQuery<?> cq, CriteriaBuilder cb, Filterable filterable) {
-        cq.where(filterable.toPredicate(entityClass, root, cq, cb));
+        if(Objects.nonNull(filterable)) cq.where(filterable.toPredicate(entityClass, root, cq, cb));
     }
 
     /**

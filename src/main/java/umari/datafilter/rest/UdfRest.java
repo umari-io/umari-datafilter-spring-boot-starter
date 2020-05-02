@@ -8,12 +8,10 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import umari.datafilter.core.Aggregable;
-import umari.datafilter.core.Filterable;
+import umari.datafilter.service.EntityHelper;
 import umari.datafilter.service.UdfTemplate;
 
 import javax.annotation.PostConstruct;
-import javax.persistence.EntityManagerFactory;
-import java.util.List;
 
 @RequestMapping("/api/udf")
 @RestController
@@ -26,7 +24,7 @@ public class UdfRest {
     private UdfTemplate udfTemplate;
 
     @Autowired
-    private EntityManagerFactory emf;
+    private EntityHelper entityHelper;
 
     @PostConstruct
     private void init() {
@@ -35,22 +33,18 @@ public class UdfRest {
 
     @PostMapping("/filter/{entity}")
     public ResponseEntity<Page<?>> filter(@PathVariable String entity, @RequestBody(required = false) UdfRequest udfRequest, Pageable pageable) {
-        Class<?> entityClass = emf.getMetamodel().getEntities().stream()
-                .filter(entityType -> entityType.getName().equals(entity))
-                .map(entityType -> entityType.getJavaType())
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Entitade %s não encontrada no projeto.", entity)));
-        return ResponseEntity.ok(udfTemplate.filter(entityClass, udfRequest.getFilterable(), pageable));
+        return ResponseEntity.ok(udfTemplate.filter(
+                entityHelper.findClassTypeByName(entity),
+                udfRequest.getFilterable(),
+                pageable));
     }
 
     @PostMapping("/agg/{entity}")
     public ResponseEntity<?> aggreate(@PathVariable String entity, @RequestBody(required = false) UdfRequest udfRequest) {
-        Class<?> entityClass = emf.getMetamodel().getEntities().stream()
-                .filter(entityType -> entityType.getName().equals(entity))
-                .map(entityType -> entityType.getJavaType())
-                .findAny()
-                .orElseThrow(() -> new IllegalArgumentException(String.format("Entitade %s não encontrada no projeto.", entity)));
-        return ResponseEntity.ok(udfTemplate.aggregate(entityClass, udfRequest.getFilterable(), udfRequest.getAggregables().toArray(new Aggregable[]{})));
+        return ResponseEntity.ok(udfTemplate.aggregate(
+                entityHelper.findClassTypeByName(entity),
+                udfRequest.getFilterable(),
+                udfRequest.getAggregables().toArray(new Aggregable[]{})));
 
     }
 

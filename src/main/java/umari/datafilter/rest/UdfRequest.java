@@ -5,6 +5,9 @@ import umari.datafilter.core.Filterable;
 
 import java.util.List;
 
+/**
+ * Classe que representa uma requisição de filtragem e agregação.
+ */
 public class UdfRequest {
     private Filterable filterable;
 

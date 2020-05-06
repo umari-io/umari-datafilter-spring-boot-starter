@@ -1,4 +1,7 @@
 = Umari Data Filter Starter
+:toc:
+:toc-title: Índice
+:sectnums:
 
 Projeto Starter Spring Boot com API para filtragem de dados e operações de agregção
 
@@ -19,29 +22,33 @@ Como primeiro passo é necessário a inclusão da depedência *umari-datafilter-
 
 == Utilização da Umari Data Filter
 
+=== Definição do banco de dados.
+
 IMPORTANT: Para o correta utilização do projeto é necessário definir a chave `spring.datasource.driver-class-name` no arquivo
 `application.properties`
 
 .H2
-[source, properties]
+[source,properties]
 ----
 spring.datasource.driver-class-name=org.h2.Driver
 ----
 
 .Oracle
-[source, properties]
+[source,properties]
 ----
 spring.datasource.driver-class-name=oracle.jdbc.OracleDriver
 ----
 
 .MySql
-[source, properties]
+[source,properties]
 ----
 spring.datasource.driver-class-name=com.mysql.jdbc.Driver
 ----
 
 .Postgre
-[source, properties]
+[source,properties]
 ----
 spring.datasource.driver-class-name=org.postgresql.Driver
 ----
+
+=== Endpoints default

@@ -1,4 +1,4 @@
-package umari.datafilter.rest;
+package umari.datafilter.core;
 
 import umari.datafilter.core.Aggregable;
 import umari.datafilter.core.Filterable;

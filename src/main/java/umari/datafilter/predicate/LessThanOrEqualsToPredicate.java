@@ -45,8 +45,10 @@ public class LessThanOrEqualsToPredicate extends AbstractPredicate {
 	}
 
 	private LocalDate getLocalDateValue(Object value) {
-		if (((String) this.getValue()).equals("@now")) return LocalDate.now();
-		return LocalDate.parse((String) this.getValue(), DateTimeFormatter.ISO_DATE);
+		String stringValue = (String) this.getValue();
+		if ((stringValue).equals("@now")) return LocalDate.now();
+		DateTimeFormatter formatter = stringValue.contains("T") ?  DateTimeFormatter.ISO_DATE_TIME : DateTimeFormatter.ISO_DATE;
+		return LocalDate.parse((String) this.getValue(), formatter);
 	}
 
 	private LocalDateTime getLocalDateTimeValue(Object value) {

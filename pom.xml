@@ -82,4 +82,12 @@
 
     </dependencies>
 
+    <distributionManagement>
+        <repository>
+            <id>github</id>
+            <name>Projeto Starter Spring Boot com API para filtragem de dados e operações de agregação</name>
+            <url>https://maven.pkg.github.com/umari-io/umari-datafilter-spring-boot-starter</url>
+        </repository>
+    </distributionManagement>
+
 </project>
